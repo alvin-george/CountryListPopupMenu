@@ -9,7 +9,7 @@
 import UIKit
 
 class ViewController: UIViewController, UITextFieldDelegate {
-
+    
     @IBOutlet weak var countryTextfield: UITextField!
     @IBOutlet weak var stateTextfield: UITextField!
     @IBOutlet weak var cityTextfield: UITextField!
@@ -17,16 +17,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let countries = NSLocale.isoCountryCodes.map { (code:String) -> String in
-            let id = NSLocale.localeIdentifier(fromComponents: [NSLocale.Key.countryCode.rawValue: code])
-            return NSLocale(localeIdentifier: "en_US").displayName(forKey: NSLocale.Key.identifier, value: id) ?? "Country not found for code: \(code)"
-        }
-        
-        print(countries)
-        print(countries.count)
-        
     }
+    
     func textFieldDidBeginEditing(_ textField: UITextField) {
+        
+        textField.resignFirstResponder()
+        showCountryListTableMenu()
         
     }
     func textFieldDidEndEditing(_ textField: UITextField) {
@@ -37,11 +33,23 @@ class ViewController: UIViewController, UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
+   
+    //Country List Menu
+    func showCountryListTableMenu()
+    {
+        
+        let countryListTableMenu = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "countryListController") as! CountryListController
+//        countryListTableMenu.currentViewController = currentViewControllerIdentifier!
+//        countryListTableMenu.delegate =  self
+        
+        countryListTableMenu.modalPresentationStyle = .overCurrentContext
+        self.present(countryListTableMenu, animated: true, completion: nil)
+    }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-
+    
+    
 }
-

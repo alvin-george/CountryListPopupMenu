@@ -8,22 +8,33 @@
 
 import UIKit
 
-class CountryListController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+protocol CountryListControllerDelegate {
     
+    func getSelectedCountry(selectedIndex : Int , countryCode: String?, countryName: String?)
+}
+
+class CountryListController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var countryListTable: UITableView!
     @IBOutlet weak var countrySearchbar: UISearchBar!
     
     var countryList:[String]!
     var countryCodeArray:[String]!
+    var delegate:CountryListControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         updateArrays()
+        initialUISetUp()
     }
     override func viewWillAppear(_ animated: Bool) {
-        
+        initialUISetUp()
         updateArrays()
+    }
+    func initialUISetUp()
+    {
+        self.countryListTable.setCardView(view: self.countryListTable)
+        self.countrySearchbar.setCardView(view: self.countrySearchbar)
     }
     func updateArrays()
     {
@@ -31,27 +42,16 @@ class CountryListController: UIViewController, UITableViewDelegate, UITableViewD
             let id = NSLocale.localeIdentifier(fromComponents: [NSLocale.Key.countryCode.rawValue: code])
             return NSLocale(localeIdentifier: "en_US").displayName(forKey: NSLocale.Key.identifier, value: id) ?? "Country not found for code: \(code)"
         }
-
         
-        var countryCode:String = String()
         
-        for i in 0 ... (countryList?.count)!-1 {
-            
-            countryCode = NSLocale.convertToCountryCode(countryName: (countryList?[i])!)
-            countryCodeArray?.append(countryCode)
-            
-        }
+        countryCodeArray = NSLocale.isoCountryCodes.sorted { $0.localizedCaseInsensitiveCompare($1) == ComparisonResult.orderedAscending }
         
-        let can = NSLocale.convertToCountryCode(countryName: "canada")
-        
-        print("can :\(can)")
-
     }
     
     
     //Country TableView
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
- 
+        
         return 50
         
     }
@@ -70,14 +70,19 @@ class CountryListController: UIViewController, UITableViewDelegate, UITableViewD
         
         let countryNameLabel = UILabel(frame: CGRect(x: 10, y: 10, width: self.view.frame.size.width, height: 21.0))
         
-        countryNameLabel.text = countryCodeArray?[indexPath.row]
+        countryNameLabel.text = countryCodeArray[indexPath.row] + " - " + countryList[indexPath.row]
         
         cell.contentView.addSubview(countryNameLabel)
+        cell.contentView.setCardView(view: cell.contentView)
         
         return cell
         
+        
     }
-
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        delegate?.getSelectedCountry(selectedIndex: indexPath.row, countryCode: countryCodeArray[indexPath.row], countryName: countryList[indexPath.row])
+        self.dismiss(animated: true, completion: nil)
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
