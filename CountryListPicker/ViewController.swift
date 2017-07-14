@@ -8,11 +8,13 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITextFieldDelegate {
+class ViewController: UIViewController, UITextFieldDelegate, CountryListControllerDelegate {
     
     @IBOutlet weak var countryTextfield: UITextField!
     @IBOutlet weak var stateTextfield: UITextField!
     @IBOutlet weak var cityTextfield: UITextField!
+    
+    @IBOutlet weak var resultsLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,19 +35,27 @@ class ViewController: UIViewController, UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
-   
+    
     //Country List Menu
     func showCountryListTableMenu()
     {
         
         let countryListTableMenu = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "countryListController") as! CountryListController
-//        countryListTableMenu.currentViewController = currentViewControllerIdentifier!
-//        countryListTableMenu.delegate =  self
+        
+        countryListTableMenu.delegate =  self
         
         countryListTableMenu.modalPresentationStyle = .overCurrentContext
         self.present(countryListTableMenu, animated: true, completion: nil)
     }
-
+    func getSelectedCountry(countryName: String?) {
+        
+        print("countryName : \(countryName!)")
+        
+        resultsLabel.text = ("countryName: \(countryName!)")
+        
+        
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

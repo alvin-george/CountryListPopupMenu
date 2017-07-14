@@ -49,7 +49,11 @@
                                     <constraint firstAttribute="height" constant="44" id="tMH-zi-sA5"/>
                                 </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <color key="barTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <textInputTraits key="textInputTraits" enablesReturnKeyAutomatically="YES"/>
+                                <connections>
+                                    <outlet property="delegate" destination="DL1-fW-JGm" id="5hu-A9-DLl"/>
+                                </connections>
                             </searchBar>
                         </subviews>
                         <color key="backgroundColor" red="0.31476861239999998" green="0.41043370959999997" blue="0.75971758369999998" alpha="0.2715378852739726" colorSpace="custom" customColorSpace="sRGB"/>
@@ -123,23 +127,34 @@
                                     <outlet property="delegate" destination="l1K-NG-ksf" id="5kj-EG-ceA"/>
                                 </connections>
                             </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J20-kM-q4Q">
+                                <rect key="frame" x="10" y="290" width="355" height="367"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Ikm-pq-xlq" firstAttribute="top" secondItem="ph1-gQ-CC5" secondAttribute="bottom" constant="40" id="0Gt-8v-0eZ"/>
                             <constraint firstAttribute="trailing" secondItem="Ikm-pq-xlq" secondAttribute="trailing" constant="20" id="5jv-t5-m4u"/>
+                            <constraint firstItem="Qs5-gj-2YL" firstAttribute="top" secondItem="J20-kM-q4Q" secondAttribute="bottom" constant="10" id="7Bu-1W-tes"/>
                             <constraint firstItem="4Od-mL-QYm" firstAttribute="leading" secondItem="MXt-Zl-Uox" secondAttribute="leading" constant="20" id="JIa-Mq-gyo"/>
                             <constraint firstAttribute="trailing" secondItem="ph1-gQ-CC5" secondAttribute="trailing" constant="20" id="M3S-o8-SnU"/>
                             <constraint firstItem="Ikm-pq-xlq" firstAttribute="leading" secondItem="MXt-Zl-Uox" secondAttribute="leading" constant="20" id="N0v-Tn-BeS"/>
+                            <constraint firstAttribute="trailing" secondItem="J20-kM-q4Q" secondAttribute="trailing" constant="10" id="Ugx-5s-yKE"/>
                             <constraint firstAttribute="trailing" secondItem="4Od-mL-QYm" secondAttribute="trailing" constant="20" id="a9g-7y-kyN"/>
+                            <constraint firstItem="J20-kM-q4Q" firstAttribute="leading" secondItem="MXt-Zl-Uox" secondAttribute="leading" constant="10" id="gVl-MP-KRv"/>
                             <constraint firstItem="4Od-mL-QYm" firstAttribute="top" secondItem="be5-4z-8CQ" secondAttribute="bottom" constant="50" id="hTZ-AN-Kr5"/>
                             <constraint firstItem="ph1-gQ-CC5" firstAttribute="leading" secondItem="MXt-Zl-Uox" secondAttribute="leading" constant="20" id="l2O-BY-iBh"/>
+                            <constraint firstItem="J20-kM-q4Q" firstAttribute="top" secondItem="Ikm-pq-xlq" secondAttribute="bottom" constant="20" id="r66-cs-B2d"/>
                             <constraint firstItem="ph1-gQ-CC5" firstAttribute="top" secondItem="4Od-mL-QYm" secondAttribute="bottom" constant="40" id="yBk-6V-YCn"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="cityTextfield" destination="Ikm-pq-xlq" id="9qU-Qh-QME"/>
                         <outlet property="countryTextfield" destination="4Od-mL-QYm" id="InN-Ug-kSF"/>
+                        <outlet property="resultsLabel" destination="J20-kM-q4Q" id="Eru-B7-Fvs"/>
                         <outlet property="stateTextfield" destination="ph1-gQ-CC5" id="c1W-Fc-x51"/>
                     </connections>
                 </viewController>

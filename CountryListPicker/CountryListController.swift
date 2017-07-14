@@ -10,10 +10,10 @@ import UIKit
 
 protocol CountryListControllerDelegate {
     
-    func getSelectedCountry(selectedIndex : Int , countryCode: String?, countryName: String?)
+    func getSelectedCountry(countryName: String?)
 }
 
-class CountryListController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class CountryListController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     
     @IBOutlet weak var countryListTable: UITableView!
     @IBOutlet weak var countrySearchbar: UISearchBar!
@@ -21,6 +21,10 @@ class CountryListController: UIViewController, UITableViewDelegate, UITableViewD
     var countryList:[String]!
     var countryCodeArray:[String]!
     var delegate:CountryListControllerDelegate?
+    
+    var filteredCountryName:[String] = []
+    
+    var searchActive:Bool =  false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,6 +52,39 @@ class CountryListController: UIViewController, UITableViewDelegate, UITableViewD
         
     }
     
+    //countrySearchbar
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchActive =  true
+    }
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchActive = false
+        
+    }
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchActive = false
+    }
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchActive = false
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        filterContentForSearchText(searchText: searchText)
+        
+        filteredCountryName = countryList.filter({ (text) -> Bool in
+            let tmp: NSString = text as NSString
+            let range = tmp.range(of: searchText, options: .caseInsensitive)
+            return range.location != NSNotFound
+        })
+        
+        if(filteredCountryName.count == 0){
+            searchActive = false;
+        } else {
+            searchActive = true;
+        }
+        
+        self.countryListTable.reloadData()
+    }
     
     //Country TableView
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -60,7 +97,13 @@ class CountryListController: UIViewController, UITableViewDelegate, UITableViewD
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return (countryList?.count)!
+        if(searchActive) {
+            
+            return filteredCountryName.count
+        }
+        else {
+            return (countryList?.count)!
+        }
         
     }
     
@@ -68,20 +111,56 @@ class CountryListController: UIViewController, UITableViewDelegate, UITableViewD
         
         let cell: UITableViewCell =  UITableViewCell()
         
-        let countryNameLabel = UILabel(frame: CGRect(x: 10, y: 10, width: self.view.frame.size.width, height: 21.0))
-        
-        countryNameLabel.text = countryCodeArray[indexPath.row] + " - " + countryList[indexPath.row]
-        
+        let countryNameLabel = UILabel(frame: CGRect(x: 10, y: 15, width: self.view.frame.size.width, height: 20.0))
         cell.contentView.addSubview(countryNameLabel)
         cell.contentView.setCardView(view: cell.contentView)
+        
+        
+        if(searchActive){
+            countryNameLabel.text = filteredCountryName[indexPath.row]
+            
+            
+        } else {
+            countryNameLabel.text = countryList[indexPath.row]
+        }
         
         return cell
         
         
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        delegate?.getSelectedCountry(selectedIndex: indexPath.row, countryCode: countryCodeArray[indexPath.row], countryName: countryList[indexPath.row])
+        
+        if(searchActive){
+            delegate?.getSelectedCountry(countryName: filteredCountryName[indexPath.row])
+            
+            
+        } else {
+            delegate?.getSelectedCountry(countryName: countryList[indexPath.row])
+        }
+        
+        
+        
+        
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    func filterContentForSearchText(searchText: String) {
+        
+        
+        filteredCountryName = countryList.filter({ (searchText) -> Bool in
+            let tmp: NSString = searchText as NSString
+            let range = tmp.range(of: searchText, options: .caseInsensitive)
+            return range.location != NSNotFound
+        })
+        
+        
+        if(filteredCountryName.count == 0){
+            searchActive = false;
+        } else {
+            searchActive = true;
+            
+        }
+        self.countryListTable.reloadData()
     }
     
     override func didReceiveMemoryWarning() {
